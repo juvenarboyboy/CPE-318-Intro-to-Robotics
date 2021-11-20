@@ -1,0 +1,90 @@
+// Juvenar C. Boyboy Jr. BSCPE 4A
+// CPE 318 Intro to Robotics
+#include <bits/stdc++.h>
+using namespace std;
+#define N 10
+#define M 10
+class QItem {
+public:
+	int dis, col, row;
+	QItem(int x, int y, int w)
+		: dis(w), row(x), col(y)
+	{
+	}
+};
+int minDistance(char grid[N][M])
+{
+	QItem source(0, 0, 0);
+	bool chck[N][M];
+	for (int i = 0; i < N; i++) {
+		for (int a = 0; a < M; a++)
+		{
+            if (grid[i][a] == 's')
+			{
+			source.row = i;
+			source.col = a;
+			}
+			if (grid[i][a] == '=')
+				chck[i][a] = true;
+			else
+				chck[i][a] = false;
+		}
+	}
+	queue<QItem> q;
+	q.push(source);
+	chck[source.row][source.col] = true;
+	while (!q.empty())
+	{
+		QItem p = q.front();
+		q.pop();
+		if (grid[p.row][p.col] == 'd')
+			return p.dis;
+		if (p.col + 1 < M && chck[p.row][p.col + 1] == false)
+		{
+			q.push(QItem(p.row, p.col + 1, p.dis + 1));
+			chck[p.row][p.col + 1] = true;
+		}
+        if (p.col - 1 >= 0 && chck[p.row][p.col - 1] == false)
+		{
+			q.push(QItem(p.row, p.col - 1, p.dis + 1));
+			chck[p.row][p.col - 1] = true;
+		}
+		if (p.row + 1 < N && chck[p.row + 1][p.col] == false)
+		{
+			q.push(QItem(p.row + 1, p.col, p.dis + 1));
+			chck[p.row + 1][p.col] = true;
+		}		
+        if (p.row - 1 >= 0 && chck[p.row - 1][p.col] == false)
+		{
+			q.push(QItem(p.row - 1, p.col, p.dis + 1));
+			chck[p.row - 1][p.col] = true;
+		}
+	}
+	return -1;
+}
+int main()
+{
+	char grid[N][M] = { 	{ '=', '*', '=', '*','*','*','*','*','*','*' },
+				{ '*', '=', '*', '*','*','*','=','*','*','*' },
+				{ '=', '*', '*', '*','*','*','=','*','*','*' },
+				{ '=', '*', '=', '*','*','*','=','s','*','*' },
+				{ '=', '=', '*', '*','*','*','*','=','=','*' },
+				{ '=', '*', '*', '*','*','*','*','*','*','*' },
+				{ '=', '*', '=', '*','*','*','*','=','*','*' },
+				{ '*', '=', '*', '*','*','=','=','*','*','*' },
+				{ '=', '*', '*', '*','=','*','*','*','*','*' },
+				{ 'd', '*', '*', '*','=','*','*','*','*','*' }
+			};
+	  cout 	<< "* = Open Path" << endl << "= = Obstacle" << endl << "s = Starting Position"<< endl << "d = Goal"<< endl<< endl;
+	for(int i=0;i<N;i++)
+	{
+		for(int a=0;j<M;a++)
+		{
+			cout << grid[i][a] << " ";
+		}
+		cout << endl;
+	}
+	cout << endl <<endl;
+	cout << "Shortest Path: " << minDistance(grid) << endl;
+	return 0;
+}
